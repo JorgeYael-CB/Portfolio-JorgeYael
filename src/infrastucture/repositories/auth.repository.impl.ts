@@ -27,7 +27,7 @@ export class AuthRepositoryImpl implements AuthUserRepository{
         return this.authDatasource.resetPassword(newPassword, userId);
     }
 
-    deleteAccount(userId: string): boolean {
+    deleteAccount(userId: string):Promise<boolean> {
         return this.deleteAccount(userId);
     }
 };
