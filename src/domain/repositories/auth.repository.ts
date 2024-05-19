@@ -3,7 +3,7 @@ import { UserEntity } from '../entities';
 
 
 
-export abstract class AuthUserDatasource {
+export abstract class AuthUserRepository {
     abstract registerUser(authRegisterUserDto: AuthRegisterUserDto): Promise<UserEntity>;
     abstract loginUser(authLoginUserDto: AuthLoginUserDto): Promise<UserEntity>;
     abstract resetPassword(newPassword: string, userId: string): Promise<UserEntity>;

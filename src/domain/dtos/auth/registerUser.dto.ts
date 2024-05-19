@@ -32,4 +32,4 @@ export class AuthRegisterUserDto{
         return[undefined, new AuthRegisterUserDto(name.trim(), emailMapper!, passwordMapper!)];
     };
 
-}
+};

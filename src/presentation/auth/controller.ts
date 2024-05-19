@@ -13,5 +13,4 @@ export class AuthController{
 
         res.status(200).json(authRegisterUserDto);
     };
-
 };
