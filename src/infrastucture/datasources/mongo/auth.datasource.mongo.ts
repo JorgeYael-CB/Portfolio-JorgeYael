@@ -5,8 +5,12 @@ import { UserEntity } from "../../../domain/entities";
 
 export class AuthDatasourceMongoImpl implements AuthUserDatasource{
 
-    constructor(){};
+    constructor(){}
 
+
+    getUserById(userId: string): Promise<UserEntity> {
+        throw new Error("Method not implemented.");
+    };
 
     registerUser(authRegisterUserDto: AuthRegisterUserDto): Promise<UserEntity> {
         throw new Error("Method not implemented.");

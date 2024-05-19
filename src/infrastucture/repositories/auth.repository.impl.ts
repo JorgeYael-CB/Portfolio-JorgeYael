@@ -8,8 +8,12 @@ export class AuthRepositoryImpl implements AuthUserRepository{
 
     constructor(
         private readonly authDatasource: AuthUserDatasource,
-    ){};
+    ){}
 
+
+    getUserById(userId: string): Promise<UserEntity> {
+        return this.authDatasource.getUserById(userId);
+    };
 
     registerUser(authRegisterUserDto: AuthRegisterUserDto): Promise<UserEntity> {
         return this.authDatasource.registerUser(authRegisterUserDto);

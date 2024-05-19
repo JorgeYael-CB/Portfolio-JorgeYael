@@ -8,4 +8,5 @@ export abstract class AuthUserRepository {
     abstract loginUser(authLoginUserDto: AuthLoginUserDto): Promise<UserEntity>;
     abstract resetPassword(newPassword: string, userId: string): Promise<UserEntity>;
     abstract deleteAccount(userId: string): boolean;
+    abstract getUserById(userId: string): Promise<UserEntity>;
 };
