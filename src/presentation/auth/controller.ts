@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AuthRegisterUserDto } from "../../domain/dtos/auth";
+import { AuthLoginUserDto, AuthRegisterUserDto } from "../../domain/dtos/auth";
 import { AuthUserRepository } from "../../domain/repositories";
 import { JwtAdapter, MailerService } from "../../config";
 import { CustomError } from "../../domain/errors";
@@ -41,4 +41,14 @@ export class AuthController{
             .then( data => res.status(200).json(data) )
             .catch( err => this.handleError(err, res) );
     };
+
+
+    loginUser = (req:Request, res:Response) => {
+        const [error, authLoginUserDto] = AuthLoginUserDto.create(req.body);
+        if( error ){
+            return res.status(400).json({error: true, errorMessage: error, succes: false, succesMessage: undefined})
+        };
+
+    
+    }
 };
