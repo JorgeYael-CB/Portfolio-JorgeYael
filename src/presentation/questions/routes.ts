@@ -33,6 +33,7 @@ export class QuestionRoutes{
 
         //* Manejamios las rutas
         routes.post('/add-question', authMiddleware.validateJwt, controller.addQuestion);
+        routes.get('/get-questions', controller.getQuestions);
 
 
 

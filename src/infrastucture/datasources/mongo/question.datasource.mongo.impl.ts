@@ -12,7 +12,14 @@ export class QuestionDatasourceMongoImpl implements QuestionDatasource {
 
     constructor(
         private readonly authUserRepository: AuthUserRepository,
-    ){};
+    ){}
+
+
+    async getQuestions(): Promise<QuestionEntity[]> {
+        const questions = await QuestionModel.find();
+
+        return questions.map( question => QuestionMapper.getQuestionFromObject(question));
+    };
 
 
     async addQuestion(addQuestionDto: AddQuestionDto, userId: string): Promise<{ user: UserEntity; question: QuestionEntity; }> {

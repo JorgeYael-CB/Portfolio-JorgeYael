@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { MailerService } from "../../config";
 import { QuestionRepository } from "../../domain/repositories";
 import { AddQuestionDto } from "../../domain/dtos/question";
-import { AddQuestionUsecase } from "../../domain/use-cases/question";
+import { AddQuestionUsecase, GetQuestionUsecase } from "../../domain/use-cases/question";
 import { CustomError } from "../../domain/errors";
 
 
@@ -40,4 +40,13 @@ export class QuestionController{
             .catch( err => this.handleError(err, res));
     };
 
+
+    getQuestions = (req:Request, res:Response) => {
+        const { l, p } = req.query;
+
+        const useCase = new GetQuestionUsecase(this.questionRepository);
+        useCase.get(l, p)
+            .then( data => res.status(200).json(data) )
+            .catch( err => this.handleError(err, res) );
+    };
 };
