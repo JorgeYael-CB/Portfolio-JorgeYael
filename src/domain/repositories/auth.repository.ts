@@ -1,4 +1,4 @@
-import { AuthLoginUserDto, AuthRegisterUserDto } from '../dtos/auth';
+import { AuthLoginUserDto, AuthRegisterUserDto, RequestPasswordDto } from '../dtos/auth';
 import { UserEntity } from '../entities';
 
 
@@ -9,4 +9,5 @@ export abstract class AuthUserRepository {
     abstract resetPassword(newPassword: string, userId: string): Promise<UserEntity>;
     abstract deleteAccount(userId: string):Promise<boolean>;
     abstract getUserById(userId: string): Promise<UserEntity>;
+    abstract requestPassword(requestPasswordDto: RequestPasswordDto): Promise<UserEntity>;
 };

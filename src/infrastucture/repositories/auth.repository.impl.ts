@@ -1,5 +1,5 @@
 import { AuthUserDatasource } from "../../domain/datasources";
-import { AuthRegisterUserDto, AuthLoginUserDto } from "../../domain/dtos/auth";
+import { AuthRegisterUserDto, AuthLoginUserDto, RequestPasswordDto } from "../../domain/dtos/auth";
 import { UserEntity } from "../../domain/entities";
 import { AuthUserRepository } from "../../domain/repositories";
 
@@ -8,8 +8,12 @@ export class AuthRepositoryImpl implements AuthUserRepository{
 
     constructor(
         private readonly authDatasource: AuthUserDatasource,
-    ){}
+    ){};
 
+
+    requestPassword(requestPasswordDto: RequestPasswordDto): Promise<UserEntity> {
+        return this.authDatasource.requestPassword(requestPasswordDto);
+    };
 
     getUserById(userId: string): Promise<UserEntity> {
         return this.authDatasource.getUserById(userId);

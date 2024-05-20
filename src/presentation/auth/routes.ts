@@ -26,6 +26,7 @@ export class AuthRoutes{
         //* Manejamos las rutas
         routes.post('/register-user', controller.registerUser);
         routes.post('/login-user', controller.loginUser);
+        routes.post('/request-password', controller.requestPassword);
 
 
         return routes;

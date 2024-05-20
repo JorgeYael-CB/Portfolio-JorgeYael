@@ -1,7 +1,7 @@
 import { Bcrypt } from "../../../config";
 import { UserModel } from "../../../db/mongo";
 import { AuthUserDatasource } from "../../../domain/datasources";
-import { AuthRegisterUserDto, AuthLoginUserDto } from "../../../domain/dtos/auth";
+import { AuthRegisterUserDto, AuthLoginUserDto, RequestPasswordDto } from "../../../domain/dtos/auth";
 import { UserEntity } from "../../../domain/entities";
 import { CustomError } from "../../../domain/errors";
 import { AuthUserMapper } from "../../mappers";
@@ -12,6 +12,16 @@ export class AuthDatasourceMongoImpl implements AuthUserDatasource{
     constructor(
         private readonly bcrypt: Bcrypt,
     ){};
+
+
+    async requestPassword(requestPasswordDto: RequestPasswordDto): Promise<UserEntity> {
+        const user = await UserModel.findOne({email: requestPasswordDto.email});
+        if( !user ) throw CustomError.badRequest('user not exist');
+
+        if( user.banned ) throw CustomError.unauthorized('Acces denied. You can send a message to support if you think it is due to an error.');
+
+        return AuthUserMapper.getUserFromObject(user);
+    };
 
 
     async getUserById(userId: string): Promise<UserEntity> {
@@ -39,6 +49,7 @@ export class AuthDatasourceMongoImpl implements AuthUserDatasource{
 
             return AuthUserMapper.getUserFromObject(newUser);
         } else {
+            if( user.banned ) throw CustomError.unauthorized('Acces denied. You can send a message to support if you think it is due to an error.');
             return AuthUserMapper.getUserFromObject(user);
         }
     };
@@ -47,6 +58,8 @@ export class AuthDatasourceMongoImpl implements AuthUserDatasource{
     async loginUser(authLoginUserDto: AuthLoginUserDto): Promise<UserEntity> {
         const user = await UserModel.findOne({email: authLoginUserDto.email});
         if( !user ) throw CustomError.badRequest('User not exist');
+
+        if( user.banned ) throw CustomError.unauthorized('Acces denied. You can send a message to support if you think it is due to an error.');
 
         const comparePassword = this.bcrypt.compare(authLoginUserDto.password, user.password!);
         if( !comparePassword ) throw CustomError.unauthorized('The credentials do not match.');
@@ -60,6 +73,8 @@ export class AuthDatasourceMongoImpl implements AuthUserDatasource{
     async resetPassword(newPassword: string, userId: string): Promise<UserEntity> {
         const user = await UserModel.findById(userId);
         if( !user ) throw CustomError.badRequest('User not exist');
+
+        if( user.banned ) throw CustomError.unauthorized('Acces denied. You can send a message to support if you think it is due to an error.');
 
         user.password = this.bcrypt.hash(newPassword);
         await user.save();
