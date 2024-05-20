@@ -18,11 +18,13 @@ interface EmailProps{
 export class MailerService{
 
     private transport: Transporter;
+    private readonly user: string;
 
 
     constructor(config: Props){
         const {host = 'smtp.gmail.com', user, pass} = config;
 
+        this.user = user;
         this.transport = nodemailer.createTransport({
             host,
             auth: {
@@ -38,6 +40,7 @@ export class MailerService{
 
         try {
             const info = await this.transport.sendMail({
+                from: `"DevComplete Studios" <${this.user}>`, // Sender address
                 to,
                 subject,
                 html,

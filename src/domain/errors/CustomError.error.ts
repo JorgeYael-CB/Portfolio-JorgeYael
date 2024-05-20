@@ -12,6 +12,7 @@ export class CustomError extends Error{
 
     static internalServerError = (error: string, details?: any) => {
         //* Manejamos los errores internos en una BaseDeDatos o en un bot de discord
+        console.log(error);
 
         return new CustomError(500, 'Internal Server Error', details);
     };
