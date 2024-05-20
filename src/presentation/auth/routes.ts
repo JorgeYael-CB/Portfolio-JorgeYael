@@ -3,6 +3,7 @@ import { AuthController } from "./controller";
 import { AuthRepositoryImpl } from '../../infrastucture/repositories/auth.repository.impl';
 import { AuthDatasourceMongoImpl } from '../../infrastucture/datasources/mongo/auth.datasource.mongo.impl';
 import { Bcrypt, JwtAdapter, MailerService, envs } from "../../config";
+import { AuthMiddleware } from "../middlewares";
 
 
 const bcrypt = new Bcrypt()
@@ -20,6 +21,8 @@ const mailerService = new MailerService({
 export class AuthRoutes{
     static get routes():Router{
         const routes = Router();
+
+        const authMiddleware = new AuthMiddleware(jwtAdapter)
         const controller = new AuthController(authRepository, jwtAdapter, mailerService);
 
 
@@ -27,6 +30,7 @@ export class AuthRoutes{
         routes.post('/register-user', controller.registerUser);
         routes.post('/login-user', controller.loginUser);
         routes.post('/request-password', controller.requestPassword);
+        routes.post('/reset-password', [authMiddleware.validateJwt], controller.resetPasword);
 
 
         return routes;

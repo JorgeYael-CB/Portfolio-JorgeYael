@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { AuthLoginUserDto, AuthRegisterUserDto, RequestPasswordDto } from "../../domain/dtos/auth";
+import { AuthLoginUserDto, AuthRegisterUserDto, RequestPasswordDto, ResetPasswordDto } from "../../domain/dtos/auth";
 import { AuthUserRepository } from "../../domain/repositories";
 import { JwtAdapter, MailerService } from "../../config";
 import { CustomError } from "../../domain/errors";
 import { LoginUserUsecase, RegisterUserUsecase, RequestPasswordUsecase } from "../../domain/use-cases/auth";
+import { ResetPasswordUsecase } from "../../domain/use-cases/auth/resetPassword.useCase";
 
 
 
@@ -69,6 +70,18 @@ export class AuthController{
 
         const useCase = new RequestPasswordUsecase(this.authRepository, this.mailerService, this.jwtAdatper);
         useCase.requestPass(requestPasswordDto!, urlResetPass)
+            .then( data => res.status(200).json(data) )
+            .catch( err => this.handleError(err, res) );
+    };
+
+
+    resetPasword = (req:Request, res:Response) => {
+        const [error, resetPasswordDto] = ResetPasswordDto.create(req.body);
+        if( error ) return res.status(400).json({error: true, erroMessage: error, succes: false, succesMessage: undefined});
+        const { userId } = req.body;
+
+        const useCase = new ResetPasswordUsecase(this.authRepository, this.mailerService, this.jwtAdatper);
+        useCase.reset(resetPasswordDto!, userId)
             .then( data => res.status(200).json(data) )
             .catch( err => this.handleError(err, res) );
     }

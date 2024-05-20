@@ -1,11 +1,11 @@
 import { JwtAdapter, MailerService } from "../../../config";
-import { RequestPasswordDto } from "../../dtos/auth";
+import { ResetPasswordDto } from "../../dtos/auth";
 import { CustomError } from "../../errors";
 import { AuthUserRepository } from "../../repositories";
 
 
 
-export class RequestPasswordUsecase{
+export class ResetPasswordUsecase{
 
     constructor(
         private readonly authUserRepository: AuthUserRepository,
@@ -13,36 +13,35 @@ export class RequestPasswordUsecase{
         private readonly jwtAdapter: JwtAdapter,
     ){};
 
+    async reset(resetPaswordDto: ResetPasswordDto, userId: string){
+        const user = await this.authUserRepository.resetPassword(resetPaswordDto.password, userId);
 
-    requestPass = async(requestPasswordDto: RequestPasswordDto, urlResetPass: any) => {
-        const user = await this.authUserRepository.requestPassword(requestPasswordDto);
         if( !user ){
+            console.log('ax2')
             throw CustomError.internalServerError('Oops! There seems to have been an error, please try again later.')
         };
 
-        const token = await this.jwtAdapter.create({userId: user.id}, '5m');
-
+        //* Enviamos un email de confirmación
         await this.mailerService.send({
             to: user.email,
-            subject: 'Reset your account in DevComplete_Studios',
+            subject: 'password reset confirmation',
             html: `
-                <h1>We received your request to restore your access to DevComplete_Studios</h1>
-                <p>you can recover it at the following <a href=${urlResetPass}/${token}>Link</a></p>
-            `
+                <h1>Hi, ${user.name}</h1>
+                <p>Your password has been successfully reset in DevComplete Studios.</p>
+                <p>If it wasn't you, you can send a message to support.</p>
+            `,
         });
 
         return {
+            succes: true,
+            succesMessage: 'password changed successfully!',
             error: false,
             errorMessage: undefined,
-            succes: true,
-            succesMessage: 'An email was sent to reset your password',
             user: {
                 name: user.name,
                 id: user.id,
-                email: user.email,
-                roles: user.roles,
             }
         }
-    };
+    }
 
-;}
+}
