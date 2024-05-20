@@ -19,7 +19,7 @@ export class LoginUserUsecase{
             throw CustomError.internalServerError('User not exist in Login', {error: 'El usuario es undefined en el Login', file: __dirname});
         }
 
-        const jwt = this.jwtAdapter.create({userId: user.id}, '1h');
+        const jwt = await this.jwtAdapter.create({userId: user.id}, '1h');
 
         return {
             error: false,
