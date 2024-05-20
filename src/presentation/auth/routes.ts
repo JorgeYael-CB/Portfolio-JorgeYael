@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { AuthController } from "./controller";
 import { AuthRepositoryImpl } from '../../infrastucture/repositories/auth.repository.impl';
-import { AuthDatasourceMongoImpl } from '../../infrastucture/datasources/mongo/auth.datasource.mongo';
+import { AuthDatasourceMongoImpl } from '../../infrastucture/datasources/mongo/auth.datasource.mongo.impl';
 import { Bcrypt, JwtAdapter, MailerService, envs } from "../../config";
 
 
@@ -25,6 +25,7 @@ export class AuthRoutes{
 
         //* Manejamos las rutas
         routes.post('/register-user', controller.registerUser);
+        routes.post('/login-user', controller.loginUser);
 
 
         return routes;

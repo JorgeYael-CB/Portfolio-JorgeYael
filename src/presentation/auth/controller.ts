@@ -3,7 +3,7 @@ import { AuthLoginUserDto, AuthRegisterUserDto } from "../../domain/dtos/auth";
 import { AuthUserRepository } from "../../domain/repositories";
 import { JwtAdapter, MailerService } from "../../config";
 import { CustomError } from "../../domain/errors";
-import { RegisterUserUsecase } from "../../domain/use-cases/auth";
+import { LoginUserUsecase, RegisterUserUsecase } from "../../domain/use-cases/auth";
 
 
 
@@ -49,6 +49,9 @@ export class AuthController{
             return res.status(400).json({error: true, errorMessage: error, succes: false, succesMessage: undefined})
         };
 
-    
+        const useCase = new LoginUserUsecase(this.authRepository, this.jwtAdatper);
+        useCase.login(authLoginUserDto!)
+            .then( data => res.json(data) )
+            .catch( err => this.handleError(err, res) );
     }
 };

@@ -51,6 +51,8 @@ export class AuthDatasourceMongoImpl implements AuthUserDatasource{
         const comparePassword = this.bcrypt.compare(authLoginUserDto.password, user.password!);
         if( !comparePassword ) throw CustomError.unauthorized('The credentials do not match.');
 
+        if( !user.verify ) throw CustomError.unauthorized('verify your account.');
+
         return AuthUserMapper.getUserFromObject(user);
     };
 

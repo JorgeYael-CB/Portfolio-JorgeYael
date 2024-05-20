@@ -9,7 +9,6 @@ export class LoginUserUsecase{
 
     constructor(
         private readonly authUserRepository: AuthUserRepository,
-        private readonly mailerService: MailerService,
         private readonly jwtAdapter: JwtAdapter,
     ){};
 
@@ -20,6 +19,21 @@ export class LoginUserUsecase{
             throw CustomError.internalServerError('User not exist in Login', {error: 'El usuario es undefined en el Login', file: __dirname});
         }
 
-        const jwt = await this.jwtAdapter.create({userId: user.id}, '1h');
+        const jwt = this.jwtAdapter.create({userId: user.id}, '1h');
+
+        return {
+            error: false,
+            errorMessage: undefined,
+            succes: true,
+            user: {
+                email: user.email,
+                name: user.name,
+                id: user.id,
+                roles: user.roles,
+                verify: user.verify,
+                date: user.date,
+            },
+            jwt,
+        }
     };
 };
