@@ -30,7 +30,8 @@ export class AuthRoutes{
         routes.post('/register-user', controller.registerUser);
         routes.post('/login-user', controller.loginUser);
         routes.post('/request-password', controller.requestPassword);
-        routes.post('/reset-password', [authMiddleware.validateJwt], controller.resetPasword);
+        routes.patch('/reset-password', [authMiddleware.validateJwt], controller.resetPasword);
+        routes.patch('/verify-account', [authMiddleware.validateJwt], controller.verifyAccount);
 
 
         return routes;

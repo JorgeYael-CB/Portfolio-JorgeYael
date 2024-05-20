@@ -3,7 +3,7 @@ import { AuthLoginUserDto, AuthRegisterUserDto, RequestPasswordDto, ResetPasswor
 import { AuthUserRepository } from "../../domain/repositories";
 import { JwtAdapter, MailerService } from "../../config";
 import { CustomError } from "../../domain/errors";
-import { LoginUserUsecase, RegisterUserUsecase, RequestPasswordUsecase } from "../../domain/use-cases/auth";
+import { LoginUserUsecase, RegisterUserUsecase, RequestPasswordUsecase, VerifyAccountUsecase } from "../../domain/use-cases/auth";
 import { ResetPasswordUsecase } from "../../domain/use-cases/auth/resetPassword.useCase";
 
 
@@ -84,5 +84,15 @@ export class AuthController{
         useCase.reset(resetPasswordDto!, userId)
             .then( data => res.status(200).json(data) )
             .catch( err => this.handleError(err, res) );
-    }
+    };
+
+
+    verifyAccount = (req:Request, res:Response) => {
+        const {userId} = req.body;
+
+        const useCase = new VerifyAccountUsecase(this.authRepository);
+        useCase.verify(userId)
+            .then( data => res.status(200).json(data) )
+            .catch( err => this.handleError(err, res) );
+    };
 };

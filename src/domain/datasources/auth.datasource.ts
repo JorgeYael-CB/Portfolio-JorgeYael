@@ -10,4 +10,5 @@ export abstract class AuthUserDatasource {
     abstract deleteAccount(userId: string):Promise<boolean>;
     abstract getUserById(userId: string): Promise<UserEntity>;
     abstract requestPassword(requestPasswordDto: RequestPasswordDto): Promise<UserEntity>;
+    abstract verifyAccount(userId: string): Promise<UserEntity>;
 };

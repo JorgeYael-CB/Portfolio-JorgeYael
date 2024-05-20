@@ -11,7 +11,21 @@ export class AuthDatasourceMongoImpl implements AuthUserDatasource{
 
     constructor(
         private readonly bcrypt: Bcrypt,
-    ){};
+    ){}
+
+
+    async verifyAccount(userId: string): Promise<UserEntity> {
+        const user = await UserModel.findById(userId);
+        if( !user ) throw CustomError.badRequest('user not exist');
+
+        if( user.banned ) throw CustomError.unauthorized('Acces denied. You can send a message to support if you think it is due to an error.');
+        if( user.verify ) throw CustomError.unauthorized('this account is already verified');
+
+        user.verify = true;
+        await user.save();
+
+        return AuthUserMapper.getUserFromObject(user);
+    };
 
 
     async requestPassword(requestPasswordDto: RequestPasswordDto): Promise<UserEntity> {
