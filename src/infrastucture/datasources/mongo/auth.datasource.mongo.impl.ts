@@ -19,6 +19,7 @@ export class AuthDatasourceMongoImpl implements AuthUserDatasource{
         if( !user ) throw CustomError.badRequest('user not exist');
 
         if( user.banned ) throw CustomError.unauthorized('Acces denied. You can send a message to support if you think it is due to an error.');
+        if( !user.verify ) throw CustomError.unauthorized('verify your account.');
 
         return AuthUserMapper.getUserFromObject(user);
     };
@@ -75,6 +76,7 @@ export class AuthDatasourceMongoImpl implements AuthUserDatasource{
         if( !user ) throw CustomError.badRequest('User not exist');
 
         if( user.banned ) throw CustomError.unauthorized('Acces denied. You can send a message to support if you think it is due to an error.');
+        if( !user.verify ) throw CustomError.unauthorized('verify your account.');
 
         user.password = this.bcrypt.hash(newPassword);
         await user.save();
