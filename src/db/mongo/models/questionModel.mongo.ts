@@ -17,6 +17,11 @@ const QuestionSchema = new Schema({
         type: String,
         required: [true, 'question is required'],
     },
+
+    questionTitle: {
+        type: String,
+        required: [true, 'title is required'],
+    },
 });
 
 
