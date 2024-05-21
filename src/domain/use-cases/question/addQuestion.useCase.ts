@@ -42,11 +42,11 @@ export class AddQuestionUsecase{
             succes: true,
             succesMessage: 'The question has been added successfully.',
             error: false,
-            user,
             question: {
                 date: question.date,
                 title: question.questionTitle,
                 question: question.question,
+                user,
             },
         };
     };

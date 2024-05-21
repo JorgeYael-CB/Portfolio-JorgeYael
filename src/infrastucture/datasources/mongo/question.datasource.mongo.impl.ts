@@ -44,17 +44,17 @@ export class QuestionDatasourceMongoImpl implements QuestionDatasource {
             user: userId,
         });
 
-        await newQuestion.save();
-
-        const populateQuestion = await newQuestion.populate('user', {
-            name: 1,
-            _id: 1,
-            verify: 1,
-            email: 1,
-            banned: 1,
-        });
+        const [, populateQuestion] = await Promise.all([
+            newQuestion.save(),
+            newQuestion.populate('user', {
+                name: 1,
+                _id: 1,
+                verify: 1,
+                email: 1,
+                banned: 1,
+            })
+        ])
 
         return QuestionMapper.getQuestionFromObject(populateQuestion);
     };
-
 };
