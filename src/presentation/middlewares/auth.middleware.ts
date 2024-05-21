@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtAdapter } from "../../config";
 import { CustomError } from "../../domain/errors";
+import { AuthUserRepository } from "../../domain/repositories";
 
 
 export class AuthMiddleware {
 
     constructor(
         private readonly jwtAdapter: JwtAdapter,
+        private readonly authUserRepository: AuthUserRepository
     ){};
 
 
@@ -36,6 +38,11 @@ export class AuthMiddleware {
                     succesMessage: undefined,
                 });
             };
+
+            const user = await this.authUserRepository.getUserById(payload.userId);
+            if( !user ){
+                return res.status(401).json({error: true, errorMessage: 'There has been an unexpected error, please try again later.'});
+            }
 
             req.body.userId = payload.userId;
 

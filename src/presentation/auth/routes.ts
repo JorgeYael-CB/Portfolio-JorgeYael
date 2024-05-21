@@ -22,7 +22,7 @@ export class AuthRoutes{
     static get routes():Router{
         const routes = Router();
 
-        const authMiddleware = new AuthMiddleware(jwtAdapter)
+        const authMiddleware = new AuthMiddleware(jwtAdapter, authRepository);
         const controller = new AuthController(authRepository, jwtAdapter, mailerService);
 
 
