@@ -19,5 +19,4 @@ export class AddAnswerDto{
 
         return[undefined, new AddAnswerDto(questionId, answer.trim())];
     };
-
 };

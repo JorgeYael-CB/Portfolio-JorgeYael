@@ -16,8 +16,6 @@ export class GetQuestionUsecase{
         const limit = l ? +l : +questions.length;
         const page =  p ? +p : 1;
 
-        console.log(limit);
-
         if( isNaN(limit) ) throw CustomError.badRequest('query param l is not a number');
         if( +p <= 0 ) throw CustomError.badRequest('query param p debe ser mayor a 0');
         if( +l <= 0 ) throw CustomError.badRequest('query param l debe ser mayor a 0');
