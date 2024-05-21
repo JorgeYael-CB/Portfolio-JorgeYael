@@ -12,11 +12,15 @@ export class QuestionRepositoryImpl implements QuestionRepository {
     ){}
 
 
+    getQuestionById(id: string): Promise<QuestionEntity> {
+        return this.questionDatasource.getQuestionById(id);
+    };
+
     getQuestions(): Promise<QuestionEntity[]> {
         return this.questionDatasource.getQuestions();
     };
 
-    addQuestion(addQuestionDto: AddQuestionDto, userId: string): Promise<{ user: UserEntity; question: QuestionEntity; }> {
+    addQuestion(addQuestionDto: AddQuestionDto, userId: string): Promise<QuestionEntity> {
         return this.questionDatasource.addQuestion(addQuestionDto, userId);
     }
 

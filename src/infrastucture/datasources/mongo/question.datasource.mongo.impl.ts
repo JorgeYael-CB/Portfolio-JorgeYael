@@ -1,31 +1,39 @@
 import { QuestionModel } from "../../../db/mongo";
 import { QuestionDatasource } from "../../../domain/datasources";
 import { AddQuestionDto } from "../../../domain/dtos/question";
-import { UserEntity } from "../../../domain/entities";
 import { QuestionEntity } from "../../../domain/entities/question.entity";
 import { CustomError } from "../../../domain/errors";
-import { AuthUserRepository } from "../../../domain/repositories";
-import { AuthUserMapper, QuestionMapper } from "../../mappers";
+import { QuestionMapper } from "../../mappers";
 
 
 export class QuestionDatasourceMongoImpl implements QuestionDatasource {
 
-    constructor(
-        private readonly authUserRepository: AuthUserRepository,
-    ){}
+    constructor(){}
+
+
+    async getQuestionById(id: string): Promise<QuestionEntity> {
+        const question = await QuestionModel.findById(id).populate('user');
+        if( !question ) throw CustomError.unauthorized('The question is not valid at this time.');
+
+        const questionMapper = QuestionMapper.getQuestionFromObject(question);
+
+        return questionMapper;
+    };
 
 
     async getQuestions(): Promise<QuestionEntity[]> {
-        const questions = await QuestionModel.find();
+        const questions = await QuestionModel.find().populate('user',{
+            _id: 0,
+            name: 1,
+            verify: 1,
+            banned: 1,
+        });
 
         return questions.map( question => QuestionMapper.getQuestionFromObject(question));
     };
 
 
-    async addQuestion(addQuestionDto: AddQuestionDto, userId: string): Promise<{ user: UserEntity; question: QuestionEntity; }> {
-        const user = await this.authUserRepository.getUserById(userId);
-        if( !user ) throw CustomError.unauthorized('User not exist');
-
+    async addQuestion(addQuestionDto: AddQuestionDto, userId: string): Promise<QuestionEntity> {
         const totalQuestions = await QuestionModel.find({user: userId}).exec();
         if( totalQuestions.length >= 3 ) throw CustomError.unauthorized('You have exceeded the limit of questions, if you have a question you can contact support.');
 
@@ -37,7 +45,16 @@ export class QuestionDatasourceMongoImpl implements QuestionDatasource {
         });
 
         await newQuestion.save();
-        return {question: QuestionMapper.getQuestionFromObject(newQuestion), user: AuthUserMapper.getUserFromObject(user)};
+
+        const populateQuestion = await newQuestion.populate('user', {
+            name: 1,
+            _id: 1,
+            verify: 1,
+            email: 1,
+            banned: 1,
+        });
+
+        return QuestionMapper.getQuestionFromObject(populateQuestion);
     };
 
 };

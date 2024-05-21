@@ -1,20 +1,15 @@
 import { Router } from "express";
 import { QuestionController } from "./controller";
 import { QuestionRepositoryImpl } from "../../infrastucture/repositories/";
-import { AuthDatasourceMongoImpl, QuestionDatasourceMongoImpl } from "../../infrastucture/datasources/mongo";
-import { AuthRepositoryImpl } from '../../infrastucture/repositories/auth.repository.impl';
+import { QuestionDatasourceMongoImpl } from "../../infrastucture/datasources/mongo";
 import { Bcrypt, JwtAdapter, MailerService, envs } from "../../config";
 import { AuthMiddleware } from "../middlewares";
 
 
 
-const bcrypt = new Bcrypt();
 const jwtAdaper = new JwtAdapter(envs.JWT_KEY);
 
-const authDatasource = new AuthDatasourceMongoImpl(bcrypt)
-const authUserRepository = new AuthRepositoryImpl(authDatasource);
-
-const questionDatasource = new QuestionDatasourceMongoImpl(authUserRepository);
+const questionDatasource = new QuestionDatasourceMongoImpl();
 const questionRepository = new QuestionRepositoryImpl(questionDatasource);
 
 const mailerService = new MailerService({
