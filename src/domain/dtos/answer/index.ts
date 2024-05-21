@@ -1,2 +1,2 @@
-export * from './addAnser.dto';
+export * from './addAnswer.dto';
 export * from './getAnswerByIdQuestion.dto';

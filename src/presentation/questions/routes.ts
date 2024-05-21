@@ -14,7 +14,7 @@ const jwtAdaper = new JwtAdapter(envs.JWT_KEY);
 const authDatasource = new AuthDatasourceMongoImpl(bcrypt)
 const authUserRepository = new AuthRepositoryImpl(authDatasource);
 
-const questionDatasource = new QuestionDatasourceMongoImpl();
+const questionDatasource = new QuestionDatasourceMongoImpl(authUserRepository);
 const questionRepository = new QuestionRepositoryImpl(questionDatasource);
 
 const mailerService = new MailerService({

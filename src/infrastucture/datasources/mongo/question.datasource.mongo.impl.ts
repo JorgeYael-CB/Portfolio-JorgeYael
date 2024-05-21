@@ -3,12 +3,15 @@ import { QuestionDatasource } from "../../../domain/datasources";
 import { AddQuestionDto } from "../../../domain/dtos/question";
 import { QuestionEntity } from "../../../domain/entities/question.entity";
 import { CustomError } from "../../../domain/errors";
+import { AuthUserRepository } from "../../../domain/repositories";
 import { QuestionMapper } from "../../mappers";
 
 
 export class QuestionDatasourceMongoImpl implements QuestionDatasource {
 
-    constructor(){}
+    constructor(
+        private readonly authUserRepository: AuthUserRepository,
+    ){}
 
 
     async getQuestionById(id: string): Promise<QuestionEntity> {
@@ -34,6 +37,12 @@ export class QuestionDatasourceMongoImpl implements QuestionDatasource {
 
 
     async addQuestion(addQuestionDto: AddQuestionDto, userId: string): Promise<QuestionEntity> {
+        const user = await this.authUserRepository.getUserById(userId);
+
+        if( !user || user.banned || !user.verify ){
+            throw CustomError.unauthorized('An error has occurred, contact support for more information.')
+        }
+
         const totalQuestions = await QuestionModel.find({user: userId}).exec();
         if( totalQuestions.length >= 3 ) throw CustomError.unauthorized('You have exceeded the limit of questions, if you have a question you can contact support.');
 

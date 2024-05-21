@@ -3,7 +3,7 @@ import { AnswerEntity } from "../entities";
 
 
 
-export abstract class AnswerDatasource{
+export abstract class AnswerRepository{
     abstract addAnser(addAnswerDto: AddAnswerDto): Promise<AnswerEntity>;
     abstract getAnsewerByIdQuestion( questionId: string ):Promise<{answer: AnswerEntity}>;
 };
