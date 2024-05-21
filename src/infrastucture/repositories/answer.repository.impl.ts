@@ -13,8 +13,8 @@ export class AnswerRepositoryImpl implements AnswerRepository {
     ){};
 
 
-    addAnser(addAnswerDto: AddAnswerDto): Promise<AnswerEntity> {
-        return this.answerDatasource.addAnser(addAnswerDto);
+    addAnwser(addAnswerDto: AddAnswerDto): Promise<AnswerEntity> {
+        return this.answerDatasource.addAnwser(addAnswerDto);
     }
     getAnsewerByIdQuestion(questionId: string): Promise<{ answer: AnswerEntity; }> {
         return this.answerDatasource.getAnsewerByIdQuestion(questionId);
