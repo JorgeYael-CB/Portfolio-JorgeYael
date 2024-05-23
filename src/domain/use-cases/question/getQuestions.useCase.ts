@@ -10,7 +10,7 @@ export class GetQuestionUsecase{
     ){};
 
 
-    get = async(l: any | undefined, p: any | undefined) => {
+    get = async(l: any, p: any, r: any) => {
         const questions = await this.questionRepository.getQuestions() ?? [];
 
         const limit = l ? +l : +questions.length;
@@ -21,9 +21,16 @@ export class GetQuestionUsecase{
         if( +l <= 0 ) throw CustomError.badRequest('query param l debe ser mayor a 0');
         if( isNaN(page) ) throw CustomError.badRequest('query param p is not a number');
 
-        const questionsPage = questions.slice((page - 1) * limit);
+        let questionsPage;
 
-        if( questionsPage.length <= 0) throw CustomError.badRequest(`El arreglo de preguntas solo tiene: ${questions.length}`);
+        if( r === 'true' ){
+            questionsPage = questions.reverse().slice((page - 1) * limit);
+        } else {
+            questionsPage = questions.slice((page - 1) * limit);
+        }
+
+
+        // if( questionsPage.length <= 0) throw CustomError.badRequest(`El arreglo de preguntas solo tiene: ${questions.length}`);
         const questionsArray = questionsPage.slice(0, limit);
 
 

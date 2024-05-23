@@ -42,10 +42,10 @@ export class QuestionController{
 
 
     getQuestions = (req:Request, res:Response) => {
-        const { l, p } = req.query;
+        const { l, p, r } = req.query;
 
         const useCase = new GetQuestionUsecase(this.questionRepository);
-        useCase.get(l, p)
+        useCase.get(l, p, r)
             .then( data => res.status(200).json(data) )
             .catch( err => this.handleError(err, res) );
     };
